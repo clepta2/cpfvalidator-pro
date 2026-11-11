@@ -88,6 +88,48 @@ Pelo 9º dígito do CPF, a API deduz a jurisdição de registro de emissão da R
 
 ---
 
+## 💡 Casos de Uso Recomendados (Exemplos Práticos de Integração)
+
+### 1. Validação Pré-Checkout em Formulários de Pagamento (PIX & Cartão)
+Evite que gateways de pagamento (Asaas, Mercado Pago, Stripe, Pagar.me) recusem cobranças com erros genéricos. Valide o CPF no frontend antes de disparar a requisição de pagamento:
+
+```javascript
+import { CpfValidatorPro } from 'cpfvalidator-pro';
+
+const inputCpf = document.querySelector('#cpfCliente').value;
+const resultado = CpfValidatorPro.validarLocal(inputCpf);
+
+if (!resultado.valido) {
+  alert('Atenção: ' + resultado.motivo);
+  return; // Impede submissão de cobrança com documento inválido
+}
+```
+
+### 2. Feedback Visual Inteligente no Cadastro (Exibição de UF de Origem)
+Exiba para o atendente ou cliente o Estado de registro do documento em tempo real sem chamadas externas de rede:
+
+```javascript
+import { CpfValidatorPro } from 'cpfvalidator-pro';
+
+document.querySelector('#cpfInput').addEventListener('input', (e) => {
+  const res = CpfValidatorPro.validarLocal(e.target.value);
+  const msgEl = document.querySelector('#feedbackDoc');
+
+  if (res.valido) {
+    msgEl.innerHTML = `✅ CPF Válido (Origem: ${res.regiaoFiscal.descricao})`;
+    msgEl.style.color = '#10b981';
+  } else if (e.target.value.replace(/\D/g, '').length === 11) {
+    msgEl.innerHTML = `❌ ${res.motivo}`;
+    msgEl.style.color = '#ef4444';
+  }
+});
+```
+
+### 3. Frente de Caixa & PDV Offline (Alta Resiliência)
+Em caso de oscilação de internet no ponto de venda, a rotina `validarLocal` garante a conformidade dos dados para contingência da NFC-e/SAT sem travar o operador de caixa.
+
+---
+
 ## 🔒 Marketplace de APIs & Ecossistema
 
 Este projeto faz parte do ecossistema de APIs de alta performance OZPro Enterprise:
