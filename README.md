@@ -1,6 +1,7 @@
-# 🛡️ CpfValidator Pro — SDK & API de Validação e Sanitização de CPF
+# 🛡️ CpfValidator Pro — SDK & Documentação de Integração
 
-> **API REST e SDK de alta performance em Cloudflare Edge para validação algorítmica (Módulo 11), sanitização e dedução de Regiões Fiscais da Receita Federal (<5ms de latência).**
+> **Cliente SDK e Documentação Oficial de Integração da API CpfValidator Pro.**  
+> Validação algorítmica matemática (Receita Federal Módulo 11), sanitização e dedução de Regiões Fiscais por UF na borda Cloudflare Anycast (<5ms).
 
 [![Status](https://img.shields.io/badge/Status-Cloudflare%20Edge%20API-success.svg)](#)
 [![Algoritmo](https://img.shields.io/badge/Algoritmo-Módulo%2011%20Oficial-blue.svg)](#)
@@ -9,15 +10,22 @@
 
 ---
 
+> 🔒 **Acesso Oficial & Chaves de API**:  
+> O acesso em produção a este microsserviço é disponibilizado e monitorado exclusivamente através do **[Ponte APIs Marketplace](https://ponte.ozpro.com.br)**.  
+> Para obter sua chave de acesso (`ponte_live_...`), contratar cotas de requisições e testar ao vivo no playground interativo, acesse:  
+> 👉 **[https://ponte.ozpro.com.br](https://ponte.ozpro.com.br)**
+
+---
+
 ## ⚡ O que é o CpfValidator Pro?
 
-O **CpfValidator Pro** é uma solução leve e ultrarrápida da OZPro Enterprise desenvolvida para eliminar entradas inválidas de CPF em:
+O **CpfValidator Pro** é uma solução de infraestrutura leve desenvolvida pela OZPro Enterprise para eliminar entradas inválidas de CPF em:
 - **Sistemas de Checkout & E-commerce**
 - **Plataformas de Onboarding & KYC**
 - **ERPs e Faturamento Fiscal (NFC-e / NF-e)**
 - **Bots de Atendimento WhatsApp**
 
-A validação pode ser executada **100% localmente no cliente (0ms I/O)** ou através da **API Anycast global da Cloudflare**.
+A validação pode ser executada **100% localmente no cliente em memória RAM (0ms I/O)** ou através da **API Oficial da Ponte**.
 
 ---
 
@@ -31,12 +39,12 @@ npm install cpfvalidator-pro
 
 *(Ou utilize o arquivo `cpfvalidator-pro.js` diretamente no seu frontend ou backend Node.js)*.
 
-### 2. Uso Rápido com o SDK (Local em RAM - 0ms)
+### 2. Uso Rápido com o SDK (Local em RAM - 0ms de Rede)
 
 ```javascript
 import { CpfValidatorPro } from 'cpfvalidator-pro';
 
-// Validação matemática instantânea sem chamada de rede
+// Validação matemática instantânea sem chamada de rede (custo ZERO de requisições)
 const resultado = CpfValidatorPro.validarLocal('529.982.247-25');
 
 console.log(resultado.valido); // true
@@ -44,10 +52,12 @@ console.log(resultado.regiaoFiscal.estados); // ['ES', 'RJ']
 console.log(resultado.cpf); // '529.982.247-25'
 ```
 
-### 3. Chamada via Edge API Cloudflare
+### 3. Chamada via Edge API Oficial da Ponte
 
 ```javascript
-const api = new CpfValidatorPro();
+const api = new CpfValidatorPro({
+  apiKey: 'ponte_live_SEU_TOKEN_AQUI' // Obtenha no Ponte APIs Marketplace
+});
 const res = await api.validar('52998224725');
 console.log(res);
 ```
@@ -55,18 +65,18 @@ console.log(res);
 ### 4. Exemplos de Chamadas HTTP Diretas (Curl / Fetch)
 
 ```bash
-# Endpoint Oficial Cloudflare Workers (Cota de 100k req/dia)
-curl -X GET "https://cpfvalidator-pro-api.maputo2.workers.dev/api/validar-cpf?cpf=529.982.247-25"
-
-# Gerador de CPF Válido para Testes
-curl -X GET "https://cpfvalidator-pro-api.maputo2.workers.dev/api/gerar"
+# Validação oficial na Ponte APIs
+curl -X GET "https://ponte.ozpro.com.br/api/validar-cpf?cpf=529.982.247-25" \
+  -H "Authorization: Bearer ponte_live_SUA_CHAVE_AQUI"
 
 # Via Path Parameter
-curl -X GET "https://cpfvalidator-pro-api.maputo2.workers.dev/api/cpf/52998224725"
+curl -X GET "https://ponte.ozpro.com.br/api/cpf/52998224725" \
+  -H "Authorization: Bearer ponte_live_SUA_CHAVE_AQUI"
 
 # Via POST JSON
-curl -X POST "https://cpfvalidator-pro-api.maputo2.workers.dev/api/validar-cpf" \
+curl -X POST "https://ponte.ozpro.com.br/api/validar-cpf" \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer ponte_live_SUA_CHAVE_AQUI" \
   -d '{"cpf": "111.111.111-11"}'
 ```
 
@@ -78,9 +88,11 @@ curl -X POST "https://cpfvalidator-pro-api.maputo2.workers.dev/api/validar-cpf" 
 ```python
 import requests
 
+headers = {"Authorization": "Bearer ponte_live_SUA_CHAVE_AQUI"}
 res = requests.get(
-    "https://cpfvalidator-pro-api.maputo2.workers.dev/api/validar-cpf",
-    params={"cpf": "529.982.247-25"}
+    "https://ponte.ozpro.com.br/api/validar-cpf",
+    params={"cpf": "529.982.247-25"},
+    headers=headers
 ).json()
 
 print("Válido?", res["valido"])
@@ -90,7 +102,13 @@ print("Região:", res["regiaoFiscal"]["descricao"])
 ### 🐘 PHP (Laravel, WordPress, WooCommerce)
 ```php
 <?php
-$res = json_decode(file_get_contents("https://cpfvalidator-pro-api.maputo2.workers.dev/api/validar-cpf?cpf=529.982.247-25"), true);
+$opcoes = [
+  "http" => [
+    "header" => "Authorization: Bearer ponte_live_SUA_CHAVE_AQUI\r\n"
+  ]
+];
+$contexto = stream_context_create($opcoes);
+$res = json_decode(file_get_contents("https://ponte.ozpro.com.br/api/validar-cpf?cpf=529.982.247-25", false, $contexto), true);
 echo $res['valido'] ? "CPF Válido" : "Inválido";
 ?>
 ```
@@ -98,13 +116,16 @@ echo $res['valido'] ? "CPF Válido" : "Inválido";
 ### 🔷 C# / .NET
 ```csharp
 using var client = new HttpClient();
-string json = await client.GetStringAsync("https://cpfvalidator-pro-api.maputo2.workers.dev/api/validar-cpf?cpf=529.982.247-25");
+client.DefaultRequestHeaders.Add("Authorization", "Bearer ponte_live_SUA_CHAVE_AQUI");
+string json = await client.GetStringAsync("https://ponte.ozpro.com.br/api/validar-cpf?cpf=529.982.247-25");
 Console.WriteLine(json);
 ```
 
 ### 🌐 JavaScript / TypeScript
 ```javascript
-const res = await fetch("https://cpfvalidator-pro-api.maputo2.workers.dev/api/validar-cpf?cpf=529.982.247-25");
+const res = await fetch("https://ponte.ozpro.com.br/api/validar-cpf?cpf=529.982.247-25", {
+  headers: { "Authorization": "Bearer ponte_live_SUA_CHAVE_AQUI" }
+});
 const dados = await res.json();
 console.log(dados.valido, dados.regiaoFiscal.estados);
 ```
