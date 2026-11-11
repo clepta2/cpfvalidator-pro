@@ -29,7 +29,18 @@ export default {
       return new Response(null, { status: 204, headers: CORS_HEADERS });
     }
 
-    // 2. Healthcheck
+    // 2. Blindagem de Métodos: API estritamente de consulta/validação (Read-only)
+    if (request.method !== 'GET' && request.method !== 'POST') {
+      return new Response(JSON.stringify({
+        ok: false,
+        error: 'Método não permitido. Esta API é estritamente de consulta e validação pública.'
+      }), {
+        status: 405,
+        headers: { 'Content-Type': 'application/json; charset=utf-8', ...CORS_HEADERS }
+      });
+    }
+
+    // 3. Healthcheck
     if (path === '/health' || path === '/status') {
       return new Response(JSON.stringify({
         ok: true,
@@ -116,9 +127,17 @@ export default {
     }
 
     // 5. Landing / Playground (Root ou /demo)
-    return new Response(getHtmlDemo(), {
-      status: 200,
-      headers: { 'Content-Type': 'text/html; charset=utf-8' }
+    if (path === '/' || path === '/demo' || path === '/index.html') {
+      return new Response(getHtmlDemo(), {
+        status: 200,
+        headers: { 'Content-Type': 'text/html; charset=utf-8' }
+      });
+    }
+
+    // 6. Rota não encontrada
+    return new Response(JSON.stringify({ ok: false, error: 'Endpoint não encontrado.' }), {
+      status: 404,
+      headers: { 'Content-Type': 'application/json; charset=utf-8', ...CORS_HEADERS }
     });
   }
 };

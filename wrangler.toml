@@ -1,7 +1,6 @@
 name = "cpfvalidator-pro-api"
 main = "worker.js"
 compatibility_date = "2026-10-01"
-account_id = "10db5eac4dab12f6842b855a953d3018"
 workers_dev = true
 
 [observability]
