@@ -56,13 +56,13 @@ console.log(res);
 
 ```bash
 # Via Query Param
-curl -X GET "https://cpfvalidator-pro-api.fichatecnica-api.workers.dev/api/validar-cpf?cpf=529.982.247-25"
+curl -X GET "https://app.ozpro.com.br/api/validar-cpf?cpf=529.982.247-25"
 
 # Via Path Parameter
-curl -X GET "https://cpfvalidator-pro-api.fichatecnica-api.workers.dev/api/cpf/52998224725"
+curl -X GET "https://app.ozpro.com.br/api/cpf/52998224725"
 
 # Via POST JSON
-curl -X POST "https://cpfvalidator-pro-api.fichatecnica-api.workers.dev/api/validar-cpf" \
+curl -X POST "https://app.ozpro.com.br/api/validar-cpf" \
   -H "Content-Type: application/json" \
   -d '{"cpf": "111.111.111-11"}'
 ```

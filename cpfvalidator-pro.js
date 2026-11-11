@@ -32,7 +32,7 @@ export class CpfValidatorPro {
    * @param {string} [options.apiKey] - Chave da API (se aplicável para cotas)
    */
   constructor(options = {}) {
-    this.endpoint = options.endpoint || 'https://cpfvalidator-pro-api.fichatecnica-api.workers.dev';
+    this.endpoint = options.endpoint || 'https://app.ozpro.com.br';
     this.apiKey = options.apiKey || '';
   }
 
