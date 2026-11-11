@@ -1,0 +1,35 @@
+{
+  "name": "cpfvalidator-pro",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "SDK e API Oficial de Validação, Sanitização e Dedução de Região Fiscal de CPF na borda (Cloudflare Edge <5ms).",
+  "main": "cpfvalidator-pro.js",
+  "module": "cpfvalidator-pro.js",
+  "types": "types/index.d.ts",
+  "scripts": {
+    "test": "node test.js",
+    "deploy": "wrangler deploy"
+  },
+  "keywords": [
+    "cpf",
+    "cpf-validator",
+    "validador-cpf",
+    "receita-federal",
+    "modulo-11",
+    "cloudflare-worker",
+    "edge-computing",
+    "brasil",
+    "brazil",
+    "sdk"
+  ],
+  "author": "clepta2 <clepta2@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clepta2/cpfvalidator-pro.git"
+  },
+  "bugs": {
+    "url": "https://github.com/clepta2/cpfvalidator-pro/issues"
+  },
+  "homepage": "https://github.com/clepta2/cpfvalidator-pro#readme"
+}
