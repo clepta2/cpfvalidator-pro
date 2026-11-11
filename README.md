@@ -1,54 +1,64 @@
-﻿# ??? CpfValidator Pro ? SDK & Documenta??o de Integra??o
+﻿# 👤 CpfValidator Pro — SDK & Documentação de Integração
 
-> **Cliente SDK e Documenta??o Oficial de Integra??o da API CpfValidator Pro.**  
-> ?? **Aten??o:** Este reposit?rio destina-se exclusivamente ? visualiza??o de documenta??o t?cnica e integra??o do cliente SDK. O servi?o de API em nuvem ? operado atrav?s do nosso **Site de APIs (em breve)**. O acesso aos endpoints na borda requer obrigatoriamente uma **Chave de API (`x-api-key`)** ativa.
+> **Cliente SDK e Documentação Oficial de Integração da API CpfValidator Pro.**  
+> 🔒 **Atenção:** Este repositório destina-se exclusivamente à visualização de documentação técnica e integração do cliente SDK. O serviço de API em nuvem é operado através do nosso **Site de APIs (em breve)**. O acesso aos endpoints na borda requer obrigatoriamente uma **Chave de API (`x-api-key`)** ativa.
 
 [![Status](https://img.shields.io/badge/Status-Cloudflare%20Edge%20API-success.svg)](#)
-[![Algoritmo](https://img.shields.io/badge/Algoritmo-M?dulo%2011%20Oficial-blue.svg)](#)
-[![Autentica??o](https://img.shields.io/badge/Autentica??o-x--api--key%20Obrigat?ria-orange.svg)](#)
-[![License: Proprietary](https://img.shields.io/badge/License-Propriet?ria%20%2F%20Portal%20de%20APIs-red.svg)](LICENSE)
+[![CI/CD Tests](https://github.com/clepta2/cpfvalidator-pro/actions/workflows/test.yml/badge.svg)](https://github.com/clepta2/cpfvalidator-pro/actions)
+[![Algoritmo](https://img.shields.io/badge/Algoritmo-Módulo%2011%20Oficial-blue.svg)](#)
+[![Autenticação](https://img.shields.io/badge/Autenticação-x--api--key%20Obrigatória-orange.svg)](#)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietária%20%2F%20Portal%20de%20APIs-red.svg)](LICENSE)
 
 ---
 
-> ?? **Acesso Oficial & Chaves de API**:  
-> O acesso em produ??o a este microsservi?o ? disponibilizado e monitorado exclusivamente atrav?s do nosso **Site de APIs (em breve no ar)**.  
-> Para obter sua chave de acesso (`x-api-key`), contratar cotas de requisi??es e testar ao vivo, realize o cadastro em nossa plataforma de APIs.
+> 🔒 **Acesso Oficial & Chaves de API**:  
+> O acesso em produção a este microsserviço é disponibilizado e monitorado exclusivamente através do nosso **Site de APIs (em breve no ar)**.  
+> Para obter sua chave de acesso (`x-api-key`), contratar cotas de requisições e testar ao vivo, realize o cadastro em nossa plataforma de APIs.
 
 ---
 
-## ? O que ? o CpfValidator Pro?
+## ⚡ O que é o CpfValidator Pro?
 
-O **CpfValidator Pro** ? uma solu??o de infraestrutura leve desenvolvida para eliminar entradas inv?lidas de CPF em:
+O **CpfValidator Pro** é uma solução de infraestrutura leve desenvolvida para eliminar entradas inválidas de CPF em:
 - **Sistemas de Checkout & E-commerce**
 - **Plataformas de Onboarding & KYC**
 - **ERPs e Faturamento Fiscal (NFC-e / NF-e)**
 - **Bots de Atendimento WhatsApp**
 
-A valida??o pode ser executada **100% localmente no cliente em mem?ria RAM (0ms I/O)** ou atrav?s da **API Oficial na nuvem**.
+A validação pode ser executada **100% localmente no cliente em memória RAM (0ms I/O)** ou através da **API Oficial na nuvem**.
 
 ---
 
-## ?? Como Integrar em seu Projeto
+## 🚀 Como Integrar em seu Projeto
 
-### 1. Instala??o
+### 1. Instalação
 
 ```bash
 npm install cpfvalidator-pro
 ```
 
-*(Ou utilize o arquivo `cpfvalidator-pro.js` diretamente no seu frontend ou backend Node.js)*.
+*(Ou utilize o arquivo `cpfvalidator-pro.js` diretamente no navegador ou Node.js)*.
 
-### 2. Uso R?pido com o SDK (Local em RAM - 0ms de Rede)
+### 2. Uso Rápido com o SDK (Local em RAM - 0ms de Rede)
 
 ```javascript
 import { CpfValidatorPro } from 'cpfvalidator-pro';
 
-// Valida??o matem?tica instant?nea sem chamada de rede (custo ZERO de requisi??es)
+// 1. Validação Instantânea em RAM
 const resultado = CpfValidatorPro.validarLocal('529.982.247-25');
 
 console.log(resultado.valido); // true
-console.log(resultado.regiaoFiscal.estados); // ['ES', 'RJ']
-console.log(resultado.cpf); // '529.982.247-25'
+console.log(resultado.regiaoFiscal.descricao); // 'Espírito Santo e Rio de Janeiro'
+console.log(resultado.cpfLimpo); // '52998224725'
+
+// 2. Bloqueio de Dígitos Repetidos Conhecidos
+const fake = CpfValidatorPro.validarLocal('111.111.111-11');
+console.log(fake.valido); // false
+console.log(fake.motivo); // 'Dígitos idênticos repetidos são matematicamente inválidos'
+
+// 3. Gerador de CPF Válido para Testes Automatizados
+const novoCpf = CpfValidatorPro.gerarTeste(8); // 8 = São Paulo
+console.log(novoCpf); // Ex: '118.353.508-28'
 ```
 
 ### 3. Chamada via Edge API Oficial (Requer x-api-key)
@@ -64,19 +74,15 @@ console.log(res);
 ### 4. Exemplos de Chamadas HTTP Diretas (Curl)
 
 ```bash
-# Valida??o oficial (Requer x-api-key)
-curl -X GET "https://ponte.ozpro.com.br/api/validar-cpf?cpf=529.982.247-25" \
-  -H "x-api-key: SUA_CHAVE_DO_PORTAL"
-
-# Via Path Parameter
-curl -X GET "https://ponte.ozpro.com.br/api/cpf/52998224725" \
+# Validação oficial (Requer x-api-key)
+curl -X GET "https://cpfvalidator-pro-api.maputo2.workers.dev/api/validar-cpf?cpf=529.982.247-25" \
   -H "x-api-key: SUA_CHAVE_DO_PORTAL"
 ```
 
 ---
 
-## ?? Licen?a
+## 📄 Licença
 
-Distribu?do sob termos propriet?rios. Veja `LICENSE` para mais detalhes.
+Distribuído sob termos proprietários. Veja `LICENSE` para mais detalhes.
 
 Copyright (c) 2026 clepta2
