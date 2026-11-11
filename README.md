@@ -58,6 +58,9 @@ console.log(res);
 # Endpoint Oficial Cloudflare Workers (Cota de 100k req/dia)
 curl -X GET "https://cpfvalidator-pro-api.maputo2.workers.dev/api/validar-cpf?cpf=529.982.247-25"
 
+# Gerador de CPF Válido para Testes
+curl -X GET "https://cpfvalidator-pro-api.maputo2.workers.dev/api/gerar"
+
 # Via Path Parameter
 curl -X GET "https://cpfvalidator-pro-api.maputo2.workers.dev/api/cpf/52998224725"
 
@@ -65,6 +68,45 @@ curl -X GET "https://cpfvalidator-pro-api.maputo2.workers.dev/api/cpf/5299822472
 curl -X POST "https://cpfvalidator-pro-api.maputo2.workers.dev/api/validar-cpf" \
   -H "Content-Type: application/json" \
   -d '{"cpf": "111.111.111-11"}'
+```
+
+---
+
+## 💻 Como Consultar a API em Qualquer Linguagem de Programação
+
+### 🐍 Python
+```python
+import requests
+
+res = requests.get(
+    "https://cpfvalidator-pro-api.maputo2.workers.dev/api/validar-cpf",
+    params={"cpf": "529.982.247-25"}
+).json()
+
+print("Válido?", res["valido"])
+print("Região:", res["regiaoFiscal"]["descricao"])
+```
+
+### 🐘 PHP (Laravel, WordPress, WooCommerce)
+```php
+<?php
+$res = json_decode(file_get_contents("https://cpfvalidator-pro-api.maputo2.workers.dev/api/validar-cpf?cpf=529.982.247-25"), true);
+echo $res['valido'] ? "CPF Válido" : "Inválido";
+?>
+```
+
+### 🔷 C# / .NET
+```csharp
+using var client = new HttpClient();
+string json = await client.GetStringAsync("https://cpfvalidator-pro-api.maputo2.workers.dev/api/validar-cpf?cpf=529.982.247-25");
+Console.WriteLine(json);
+```
+
+### 🌐 JavaScript / TypeScript
+```javascript
+const res = await fetch("https://cpfvalidator-pro-api.maputo2.workers.dev/api/validar-cpf?cpf=529.982.247-25");
+const dados = await res.json();
+console.log(dados.valido, dados.regiaoFiscal.estados);
 ```
 
 ---
