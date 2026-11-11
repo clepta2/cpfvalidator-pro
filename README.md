@@ -1,4 +1,4 @@
-# ??? CpfValidator Pro ? SDK & Documenta??o de Integra??o
+﻿# ??? CpfValidator Pro ? SDK & Documenta??o de Integra??o
 
 > **Cliente SDK e Documenta??o Oficial de Integra??o da API CpfValidator Pro.**  
 > ?? **Aten??o:** Este reposit?rio destina-se exclusivamente ? visualiza??o de documenta??o t?cnica e integra??o do cliente SDK. O servi?o de API em nuvem ? operado atrav?s do nosso **Site de APIs (em breve)**. O acesso aos endpoints na borda requer obrigatoriamente uma **Chave de API (`x-api-key`)** ativa.
@@ -65,11 +65,11 @@ console.log(res);
 
 ```bash
 # Valida??o oficial (Requer x-api-key)
-curl -X GET "https://cpfvalidator-pro-api.maputo2.workers.dev/api/validar-cpf?cpf=529.982.247-25" \
+curl -X GET "https://ponte.ozpro.com.br/api/validar-cpf?cpf=529.982.247-25" \
   -H "x-api-key: SUA_CHAVE_DO_PORTAL"
 
 # Via Path Parameter
-curl -X GET "https://cpfvalidator-pro-api.maputo2.workers.dev/api/cpf/52998224725" \
+curl -X GET "https://ponte.ozpro.com.br/api/cpf/52998224725" \
   -H "x-api-key: SUA_CHAVE_DO_PORTAL"
 ```
 
