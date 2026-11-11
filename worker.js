@@ -19,6 +19,29 @@ const CORS_HEADERS = {
   'Access-Control-Max-Age': '86400'
 };
 
+// Rate limiter in-memory por nó de borda (Sliding Window)
+const ipBuckets = new Map();
+
+function checkRateLimit(ip, limit = 60, windowMs = 60000) {
+  const now = Date.now();
+  let entry = ipBuckets.get(ip);
+  if (!entry || now > entry.resetAt) {
+    entry = { count: 1, resetAt: now + windowMs };
+    ipBuckets.set(ip, entry);
+    if (ipBuckets.size > 10000) {
+      for (const [k, v] of ipBuckets) {
+        if (now > v.resetAt) ipBuckets.delete(k);
+      }
+    }
+    return { ok: true, remaining: limit - 1, resetAt: entry.resetAt };
+  }
+  entry.count++;
+  if (entry.count > limit) {
+    return { ok: false, remaining: 0, resetAt: entry.resetAt };
+  }
+  return { ok: true, remaining: limit - entry.count, resetAt: entry.resetAt };
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -37,6 +60,31 @@ export default {
       }), {
         status: 405,
         headers: { 'Content-Type': 'application/json; charset=utf-8', ...CORS_HEADERS }
+      });
+    }
+
+    // 3. Controle de Rate Limit por IP / Chave comercial
+    const clientIp = request.headers.get('CF-Connecting-IP') || request.headers.get('x-real-ip') || '127.0.0.1';
+    const authHeader = request.headers.get('Authorization') || request.headers.get('x-api-key') || '';
+    const isCommercial = authHeader.length > 10;
+    const maxReqs = isCommercial ? 300 : 60; // 300/min com chave, 60/min público anônimo
+    const rl = checkRateLimit(clientIp, maxReqs, 60000);
+
+    if (!rl.ok && path !== '/' && path !== '/health' && path !== '/demo') {
+      return new Response(JSON.stringify({
+        ok: false,
+        valido: false,
+        error: 'Limite de requisições excedido. Limite gratuito: 60 requisições/minuto. Para cotas ampliadas e suporte de alta concorrência, adquira uma chave no Ponte API Marketplace (https://ponte.ozpro.com.br).',
+        retryAfterSeconds: Math.ceil((rl.resetAt - Date.now()) / 1000)
+      }, null, 2), {
+        status: 429,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          ...CORS_HEADERS,
+          'Retry-After': String(Math.max(1, Math.ceil((rl.resetAt - Date.now()) / 1000))),
+          'X-RateLimit-Limit': String(maxReqs),
+          'X-RateLimit-Remaining': String(rl.remaining)
+        }
       });
     }
 
