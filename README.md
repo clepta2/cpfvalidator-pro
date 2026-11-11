@@ -55,14 +55,14 @@ console.log(res);
 ### 4. Exemplos de Chamadas HTTP Diretas (Curl / Fetch)
 
 ```bash
-# Via Query Param
-curl -X GET "https://app.ozpro.com.br/api/validar-cpf?cpf=529.982.247-25"
+# Endpoint Oficial Cloudflare Workers (Cota de 100k req/dia)
+curl -X GET "https://cpfvalidator-pro-api.maputo2.workers.dev/api/validar-cpf?cpf=529.982.247-25"
 
 # Via Path Parameter
-curl -X GET "https://app.ozpro.com.br/api/cpf/52998224725"
+curl -X GET "https://cpfvalidator-pro-api.maputo2.workers.dev/api/cpf/52998224725"
 
 # Via POST JSON
-curl -X POST "https://app.ozpro.com.br/api/validar-cpf" \
+curl -X POST "https://cpfvalidator-pro-api.maputo2.workers.dev/api/validar-cpf" \
   -H "Content-Type: application/json" \
   -d '{"cpf": "111.111.111-11"}'
 ```
