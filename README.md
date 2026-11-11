@@ -172,6 +172,42 @@ Em caso de oscilação de internet no ponto de venda, a rotina `validarLocal` ga
 
 ---
 
+## 🔗 Como Usar em Conjunto com as Outras APIs da Ponte
+
+### 🏢 Onboarding Completo PF / PJ (CPF + CNPJ Pro)
+Em formulários de cadastro de clientes, utilize o `CpfValidatorPro` para Pessoa Física e encadeie com a `CnpjPro` para Pessoa Jurídica:
+
+```javascript
+import { CpfValidatorPro } from 'cpfvalidator-pro';
+import CnpjPro from 'cnpj-pro';
+
+async function validarDocumentoCliente(doc) {
+  const limpo = doc.replace(/\D/g, '');
+
+  if (limpo.length === 11) {
+    // 1. Validação Matemática Instantânea de CPF (0ms I/O)
+    const cpf = CpfValidatorPro.validarLocal(limpo);
+    return { tipo: 'PF', valido: cpf.valido, formatado: cpf.cpf, ufOrigem: cpf.regiaoFiscal?.estados };
+  } 
+  
+  if (limpo.length === 14) {
+    // 2. Consulta Cadastral Completa de CNPJ na Borda (<25ms)
+    const cnpjApi = new CnpjPro();
+    const empresa = await cnpjApi.consultar(limpo);
+    return {
+      tipo: 'PJ',
+      valido: empresa.situacaoCadastral === 'ATIVA',
+      razaoSocial: empresa.razaoSocial,
+      cnae: empresa.cnaePrincipalDescricao
+    };
+  }
+
+  throw new Error('Documento com tamanho inválido.');
+}
+```
+
+---
+
 ## 🔒 Marketplace de APIs & Ecossistema
 
 Este projeto faz parte do ecossistema de APIs de alta performance OZPro Enterprise:
