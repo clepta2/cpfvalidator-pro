@@ -205,10 +205,3 @@ async function validarDocumentoCliente(doc) {
   throw new Error('Documento com tamanho inválido.');
 }
 ```
-
----
-
-## 🔒 Marketplace de APIs & Ecossistema
-
-Este projeto faz parte do ecossistema de APIs de alta performance OZPro Enterprise:
-👉 **[Acessar Ponte API Marketplace](https://ponte.ozpro.com.br)**

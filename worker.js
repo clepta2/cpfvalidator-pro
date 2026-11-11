@@ -74,7 +74,7 @@ export default {
       return new Response(JSON.stringify({
         ok: false,
         valido: false,
-        error: 'Limite de requisições excedido. Limite gratuito: 60 requisições/minuto. Para cotas ampliadas e suporte de alta concorrência, adquira uma chave no Ponte API Marketplace (https://ponte.ozpro.com.br).',
+        error: 'Limite de requisições excedido. Limite gratuito: 60 requisições/minuto.',
         retryAfterSeconds: Math.ceil((rl.resetAt - Date.now()) / 1000)
       }, null, 2), {
         status: 429,
@@ -98,8 +98,7 @@ export default {
         latency: 'edge-sub-5ms',
         algoritmo: 'Módulo 11 (RFC Receita Federal)',
         edgeLocation: request.cf ? request.cf.colo : 'Edge',
-        docs: 'https://github.com/clepta2/cpfvalidator-pro',
-        marketplace: env.MARKETPLACE_URL || 'https://ponte.ozpro.com.br'
+        docs: 'https://github.com/clepta2/cpfvalidator-pro'
       }, null, 2), {
         status: 200,
         headers: {
@@ -315,7 +314,7 @@ function getHtmlDemo() {
     </div>
 
     <footer>
-      Parte oficial do <a href="https://ponte.ozpro.com.br" target="_blank">Ponte API Marketplace</a> &bull; Código aberto no <a href="https://github.com/clepta2/cpfvalidator-pro" target="_blank">GitHub</a>
+      Código aberto no <a href="https://github.com/clepta2/cpfvalidator-pro" target="_blank">GitHub (clepta2/cpfvalidator-pro)</a>
     </footer>
   </div>
 
