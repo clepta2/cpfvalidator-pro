@@ -1,0 +1,14 @@
+name = "cpfvalidator-pro-api"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+workers_dev = true
+
+[observability]
+enabled = true
+
+[vars]
+SERVICE_NAME = "CpfValidator Pro API"
+ENVIRONMENT = "production"
+GITHUB_REPO = "clepta2/cpfvalidator-pro"
+DOCS_URL = "https://github.com/clepta2/cpfvalidator-pro"
+API_VERSION = "1.0.0"
