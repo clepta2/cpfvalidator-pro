@@ -74,10 +74,27 @@ console.log(res);
 ### 4. Exemplos de Chamadas HTTP Diretas (Curl)
 
 ```bash
-# Validação oficial (Requer x-api-key)
+# Validação individual (Requer x-api-key)
 curl -X GET "https://cpfvalidator-pro-api.maputo2.workers.dev/api/validar-cpf?cpf=529.982.247-25" \
   -H "x-api-key: SUA_CHAVE_DO_PORTAL"
+
+# Validação em lote (Batch) — até 100 CPFs Pro ou 10 gratuitos
+curl -X POST "https://cpfvalidator-pro-api.maputo2.workers.dev/api/cpf/lote" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: SUA_CHAVE_DO_PORTAL" \
+  -d '{"cpfs": ["529.982.247-25", "111.111.111-11", "118.353.508-28"]}'
 ```
+
+O endpoint em lote valida exclusivamente a lista enviada em memória RAM (<2ms) e retorna o status e a região fiscal de cada item, sem truncamento silencioso.
+
+---
+
+## 🛡️ Rate Limiting & Proteção de Cotas
+
+- **Plano Gratuito:** até 60 req/min por isolate de borda.
+- **Plano Pro / Enterprise (`x-api-key`):** até 300 req/min.
+- Para alto volume de processamento (onboarding/ERP), utilize a rota de lote (`/api/cpf/lote`) para validar até 100 CPFs por requisição sem estourar limites temporários.
+- O contador em memória do Worker é local por isolate e não representa uma cota diária global centralizada.
 
 ---
 

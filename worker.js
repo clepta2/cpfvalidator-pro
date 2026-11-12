@@ -3,7 +3,7 @@
  * Cloudflare Worker Anycast para CpfValidator Pro API (maputo2.workers.dev)
  * Validação do Módulo 11 da Receita Federal, dedução de Região Fiscal e LGPD.
  *
- * Rate Limiter Ativo: 1 req/s para Free (60 req/min = 86.400 req/dia máx) | 300 req/min para Pro
+ * Rate limiter local por isolate; não define cota diária global. Lotes reduzem chamadas.
  *
  * @license MIT
  * @see https://github.com/clepta2/cpfvalidator-pro
@@ -60,6 +60,13 @@ export default {
       });
     }
 
+    let bodyJson = null;
+    if (request.method === 'POST') {
+      try {
+        bodyJson = await request.json();
+      } catch (_) {}
+    }
+
     // 3. Autenticação & Rate Limiting
     const apiKey = request.headers.get('x-api-key') ||
                    request.headers.get('Authorization')?.replace(/^Bearer\s+/i, '') ||
@@ -73,7 +80,7 @@ export default {
     if (!rl.ok && path !== '/health' && path !== '/status' && path !== '/' && path !== '/demo') {
       return new Response(JSON.stringify({
         ok: false,
-        error: 'Limite de requisições excedido. Máximo permitido: 1 req/segundo (60 req/min = 86.400 req/dia máx). Para vazão ilimitada, utilize sua chave x-api-key Pro.',
+        error: 'Limite temporário de requisições excedido. Aguarde o período indicado em Retry-After.',
         retryAfterSeconds: Math.ceil((rl.resetAt - Date.now()) / 1000)
       }, null, 2), {
         status: 429,
@@ -112,7 +119,8 @@ export default {
           service: 'CpfValidator Pro API',
           cluster: 'Cloudflare Edge Anycast',
           rotas: {
-            validar: 'GET /api/validar-cpf?cpf=... ou POST /api/validar-cpf'
+            validar: 'GET /api/validar-cpf?cpf=... ou POST /api/validar-cpf',
+            lote: 'POST /api/cpf/lote (até 100 CPFs Pro ou 10 gratuitos)'
           },
           github: 'https://github.com/clepta2/cpfvalidator-pro'
         }, null, 2), {
@@ -126,15 +134,62 @@ export default {
       });
     }
 
-    // 6. Rota Principal de Validação de CPF (GET & POST)
+    // 6. Validação em Lote de CPFs (POST /api/cpf/lote ou /api/validar-cpf/lote)
+    if (path === '/api/cpf/lote' || path === '/api/validar-cpf/lote' || path === '/api/cpf/validar-lote') {
+      if (request.method !== 'POST') {
+        return new Response(JSON.stringify({ ok: false, error: 'Use POST com um array "cpfs".' }), {
+          status: 405,
+          headers: { 'Content-Type': 'application/json; charset=utf-8', ...CORS_HEADERS }
+        });
+      }
+
+      const lista = bodyJson && Array.isArray(bodyJson.cpfs) ? bodyJson.cpfs : null;
+      if (!lista || lista.length === 0) {
+        return new Response(JSON.stringify({ ok: false, error: 'Envie um array não vazio "cpfs" no corpo JSON.' }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json; charset=utf-8', ...CORS_HEADERS }
+        });
+      }
+
+      const maxItems = isPro ? 100 : 10;
+      if (lista.length > maxItems) {
+        return new Response(JSON.stringify({
+          ok: false,
+          error: `O lote aceita até ${maxItems} CPFs por requisição neste plano.`,
+          maxItems
+        }), {
+          status: 413,
+          headers: { 'Content-Type': 'application/json; charset=utf-8', ...CORS_HEADERS }
+        });
+      }
+
+      const resultados = lista.map((item) => {
+        const res = CpfValidatorPro.validarLocal(item);
+        return {
+          cpfInformado: String(item),
+          ok: res.valido,
+          ...res
+        };
+      });
+
+      return new Response(JSON.stringify({
+        ok: true,
+        totalSolicitado: lista.length,
+        totalValidos: resultados.filter((item) => item.valido).length,
+        totalInvalidos: resultados.filter((item) => !item.valido).length,
+        resultados
+      }, null, 2), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json; charset=utf-8', ...CORS_HEADERS }
+      });
+    }
+
+    // 7. Rota Principal de Validação de CPF (GET & POST)
     if (path === '/api/validar-cpf' || path === '/api/cpf/validar' || path === '/api/validar' || path.startsWith('/api/cpf/')) {
       let cpfInput = url.searchParams.get('cpf') || url.searchParams.get('valor') || '';
 
-      if (!cpfInput && request.method === 'POST') {
-        try {
-          const body = await request.json();
-          cpfInput = body.cpf || body.valor || '';
-        } catch (_) {}
+      if (!cpfInput && bodyJson) {
+        cpfInput = bodyJson.cpf || bodyJson.valor || '';
       }
 
       if (!cpfInput && path.startsWith('/api/cpf/')) {
