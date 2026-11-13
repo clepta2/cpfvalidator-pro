@@ -72,7 +72,16 @@ export default {
                    request.headers.get('Authorization')?.replace(/^Bearer\s+/i, '') ||
                    url.searchParams.get('api_key') ||
                    url.searchParams.get('key') || '';
-    const isPro = String(apiKey).trim().length >= 16;
+    const cleanKey = String(apiKey).trim();
+    const isPro = Boolean(
+      cleanKey && (
+        cleanKey.startsWith('cpf_live_') || 
+        cleanKey.startsWith('cpf_pro_') || 
+        cleanKey.startsWith('cpf_master_') || 
+        cleanKey.startsWith('pnt_live_') ||
+        (env && (env.API_KEY === cleanKey || env.PRO_KEY === cleanKey))
+      ) && cleanKey.length >= 16
+    );
     const clientIp = request.headers.get('CF-Connecting-IP') || request.headers.get('x-real-ip') || '127.0.0.1';
     const maxReqs = isPro ? 300 : 60;
     const rl = checkRateLimit(isPro ? apiKey : clientIp, maxReqs, 60000);
