@@ -196,6 +196,24 @@ export default {
     }
 
     // 7. Rota Principal de Validação de CPF (GET & POST)
+    if (path === '/api/gerar-cpf' || path === '/api/cpf/gerar') {
+      const regiao = parseInt(url.searchParams.get('regiao') || '8', 10);
+      const comPontos = url.searchParams.get('formatado') !== 'false';
+      const cpfGerado = CpfValidatorPro.gerarTeste(isNaN(regiao) ? 8 : regiao);
+      const res = CpfValidatorPro.validarLocal(cpfGerado);
+      return new Response(JSON.stringify({
+        ok: true,
+        cpf: comPontos ? res.cpf : res.cpfLimpo,
+        cpfLimpo: res.cpfLimpo,
+        cpfFormatado: res.cpf,
+        regiaoFiscal: res.regiaoFiscal,
+        tipo: 'Pessoa Física (Gerado para Homologação)'
+      }, null, 2), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json; charset=utf-8', ...CORS_HEADERS }
+      });
+    }
+
     if (path === '/api/validar-cpf' || path === '/api/cpf/validar' || path === '/api/validar' || path.startsWith('/api/cpf/')) {
       let cpfInput = url.searchParams.get('cpf') || url.searchParams.get('valor') || '';
 
