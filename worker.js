@@ -10,6 +10,8 @@
  */
 
 import { CpfValidatorPro } from './cpfvalidator-pro.js';
+import { validarIePorEstado, ESTADOS_IE } from './ievalidator-modulo.js';
+import handleClientInspector from './clientinspector-modulo.js';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -233,7 +235,59 @@ export default {
       });
     }
 
-    return new Response(JSON.stringify({ ok: false, error: 'Endpoint não encontrado. Use /api/validar-cpf' }), {
+    // 8. Rotas do Módulo ClientInspector Pro (/api/meu-ip, /api/ip, /api/whoami, /api/user-agent, /api/browser)
+    if (path === '/api/meu-ip' || path === '/api/ip' || path === '/api/whoami' || path === '/api/user-agent' || path === '/api/browser' || path === '/api/detectar-cliente') {
+      return handleClientInspector(request, env, ctx);
+    }
+
+    // 9. Rotas do Módulo IEValidator Pro (Inscrição Estadual 27 UFs)
+    if (path === '/api/ie/estados' || path === '/estados') {
+      return new Response(JSON.stringify({
+        ok: true,
+        totalEstados: 27,
+        estados: ESTADOS_IE
+      }, null, 2), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json; charset=utf-8', ...CORS_HEADERS }
+      });
+    }
+
+    if (path === '/api/ie/lote' && request.method === 'POST') {
+      let itens = [];
+      if (bodyJson) {
+        itens = Array.isArray(bodyJson) ? bodyJson : (bodyJson.itens || []);
+      }
+      const resultados = itens.slice(0, 50).map(i => validarIePorEstado(i.uf, i.ie));
+      return new Response(JSON.stringify({
+        ok: true,
+        totalProcessado: resultados.length,
+        resultados
+      }, null, 2), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json; charset=utf-8', ...CORS_HEADERS }
+      });
+    }
+
+    // Validação Individual de IE (suporte a /api/ie/:uf/:ie e query params)
+    let ufIe = url.searchParams.get('uf');
+    let valorIe = url.searchParams.get('ie') || url.searchParams.get('valor');
+    const matchIe = path.match(/^\/api\/ie\/([a-zA-Z]{2})\/([a-zA-Z0-9.\-\/]+)$/i) || path.match(/^\/([a-zA-Z]{2})\/([a-zA-Z0-9.\-\/]+)$/i);
+    if (matchIe) {
+      ufIe = matchIe[1];
+      valorIe = matchIe[2];
+    }
+    if ((path.startsWith('/api/ie') || path.startsWith('/api/validar-ie')) && ufIe && valorIe) {
+      const resIe = validarIePorEstado(ufIe, valorIe);
+      return new Response(JSON.stringify({
+        ok: resIe.valido,
+        ...resIe
+      }, null, 2), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json; charset=utf-8', ...CORS_HEADERS }
+      });
+    }
+
+    return new Response(JSON.stringify({ ok: false, error: 'Endpoint não encontrado. Rotas: /api/validar-cpf, /api/ie/estados, /api/ie/:uf/:ie, /api/meu-ip' }), {
       status: 404,
       headers: { 'Content-Type': 'application/json; charset=utf-8', ...CORS_HEADERS }
     });

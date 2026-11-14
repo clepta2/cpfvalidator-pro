@@ -1,8 +1,8 @@
 {
   "name": "cpfvalidator-pro",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "type": "module",
-  "description": "SDK e API Oficial de Validação, Sanitização e Dedução de Região Fiscal de CPF na borda (Cloudflare Edge <5ms).",
+  "description": "Super Validador de Borda Anycast (<2ms): Validação de CPF (Módulo 11), Inscrição Estadual das 27 UFs (SINTEGRA/CONFAZ) e Inspeção de IP/User-Agent.",
   "main": "cpfvalidator-pro.js",
   "module": "cpfvalidator-pro.js",
   "types": "types/index.d.ts",

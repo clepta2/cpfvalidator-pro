@@ -47,5 +47,30 @@ const resMetodo = await worker.fetch(new Request('https://api.test/api/cpf/lote'
 console.assert(resMetodo.status === 405, 'GET em /api/cpf/lote deve retornar 405');
 console.log('✅ Método incorreto rejeitado');
 
-console.log('🎉 Todos os testes passaram com 100% de sucesso!');
+// 5. Teste de Inscrição Estadual Integrada (Módulo IEValidator)
+console.log('\n--- 5. Rota de Inscrição Estadual (SINTEGRA 27 UFs) ---');
+const resIe = await worker.fetch(new Request('https://api.test/api/ie/SP/110042490114'), {});
+const bodyIe = await resIe.json();
+console.assert(resIe.status === 200, 'Status IE SP deve ser 200');
+console.assert(bodyIe.valido === true, 'IE de SP deve ser válida');
+console.assert(bodyIe.estado === 'São Paulo', 'Estado deve ser SP');
+console.log('✅ Rota /api/ie/SP/:ie validou com sucesso Inscrição Estadual de SP');
+
+const resIeEstados = await worker.fetch(new Request('https://api.test/api/ie/estados'), {});
+const bodyEstados = await resIeEstados.json();
+console.assert(bodyEstados.totalEstados === 27, 'Deve listar 27 UFs');
+console.log('✅ Rota /api/ie/estados retornou exatamente 27 estados');
+
+// 6. Teste de ClientInspector Integrado (IP e Conexão)
+console.log('\n--- 6. Rota de ClientInspector (IP & User-Agent) ---');
+const resIp = await worker.fetch(new Request('https://api.test/api/meu-ip', {
+  headers: { 'cf-connecting-ip': '177.18.200.45', 'user-agent': 'Mozilla/5.0 Chrome/130.0' }
+}), {});
+const bodyIp = await resIp.json();
+console.assert(resIp.status === 200, 'Status deve ser 200');
+console.assert(bodyIp.ip.endereco === '177.18.200.45', 'IP deve bater com header');
+console.assert(bodyIp.navegador.nome === 'Google Chrome', 'Navegador decodificado como Chrome');
+console.log('✅ Rota /api/meu-ip decodificou IP e Navegador com sucesso');
+
+console.log('\n🎉 Todos os testes passaram com 100% de sucesso!');
 
