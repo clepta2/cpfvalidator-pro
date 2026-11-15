@@ -1,12 +1,12 @@
-import fs from 'fs';
+﻿import fs from 'fs';
 
 const html = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CpfValidator Pro • Super Validador Anycast & SINTEGRA • Ponte API Market</title>
-  <meta name="description" content="Super Validador de Borda Anycast (<2ms): Validação de CPF Módulo 11 da Receita Federal, Inscrição Estadual das 27 UFs (SINTEGRA/CONFAZ) e Inspeção Forense de IP." />
+  <title>CpfValidator Pro â€¢ Super Validador Anycast & SINTEGRA â€¢ Ponte API Market</title>
+  <meta name="description" content="Super Validador de Borda Anycast (<2ms): ValidaÃ§Ã£o de CPF MÃ³dulo 11 da Receita Federal, InscriÃ§Ã£o Estadual das 27 UFs (SINTEGRA/CONFAZ) e InspeÃ§Ã£o Forense de IP." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -37,11 +37,22 @@ const html = `<!DOCTYPE html>
     .playground-split {
       display: grid;
       grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
-      gap: 26px;
+      gap: 24px;
       margin-top: 24px;
+      width: 100%;
+      min-width: 0;
     }
     @media (max-width: 1100px) {
-      .playground-split { grid-template-columns: 1fr; }
+      .playground-split { grid-template-columns: 1fr !important; gap: 18px !important; }
+    }
+    .playground-left,
+    .playground-right,
+    .tab-pane,
+    .card-dashboard,
+    .terminal-window {
+      min-width: 0 !important;
+      max-width: 100% !important;
+      overflow: hidden;
     }
     .specs-table {
       width: 100%;
@@ -180,10 +191,10 @@ const html = `<!DOCTYPE html>
 <body>
   <div class="app-shell">
     <!-- Sidebar Oficial do Ecossistema Ponte / OZPro -->
-    <aside class="sidebar" aria-label="Navegação principal">
+    <aside class="sidebar" aria-label="NavegaÃ§Ã£o principal">
       <a class="brand" href="#cpf" aria-label="Ponte API, CpfValidator Pro">
         <img src="brand/ozpro-mark.svg" alt="Ponte API Logo" style="width:38px;height:38px;border-radius:10px;object-fit:contain;background:var(--mint);padding:4px;box-shadow:0 4px 12px rgba(163,230,53,0.35);" />
-        <span><strong>ponte</strong><small>CPFVALIDATOR · OZPRO</small></span>
+        <span><strong>ponte</strong><small>CPFVALIDATOR Â· OZPRO</small></span>
       </a>
 
       <nav class="primary-nav" id="primary-nav">
@@ -192,13 +203,13 @@ const html = `<!DOCTYPE html>
           <i data-lucide="shield-check"></i> <span>Validador de CPF</span>
         </button>
         <button class="nav-link" data-view="ie">
-          <i data-lucide="file-check"></i> <span>Inscrição Estadual (27 UFs)</span>
+          <i data-lucide="file-check"></i> <span>InscriÃ§Ã£o Estadual (27 UFs)</span>
         </button>
         <button class="nav-link" data-view="inspector">
           <i data-lucide="cpu"></i> <span>ClientInspector (IP & WebGL)</span>
         </button>
         <button class="nav-link" data-view="docs">
-          <i data-lucide="book-open"></i> <span>Documentação REST</span>
+          <i data-lucide="book-open"></i> <span>DocumentaÃ§Ã£o REST</span>
         </button>
 
         <div class="nav-section-label">ECOSSISTEMA PONTE</div>
@@ -216,7 +227,7 @@ const html = `<!DOCTYPE html>
       <div class="sidebar-bottom">
         <div class="status-row">
           <span class="status-dot connected"></span>
-          <span>Cloudflare Edge · &lt;2ms</span>
+          <span>Cloudflare Edge Â· &lt;2ms</span>
         </div>
         <div class="profile-row">
           <div class="avatar lg">CV</div>
@@ -225,18 +236,18 @@ const html = `<!DOCTYPE html>
             <span>Super Validador Anycast</span>
           </div>
         </div>
-        <div class="sidebar-version">v1.2.0 · Módulo 11 · SINTEGRA 27 UFs</div>
+        <div class="sidebar-version">v1.2.0 Â· MÃ³dulo 11 Â· SINTEGRA 27 UFs</div>
       </div>
     </aside>
 
-    <!-- Área Principal -->
+    <!-- Ãrea Principal -->
     <main class="main-area">
       <!-- Topbar Oficial -->
       <header class="topbar">
         <div class="breadcrumb">
           <span>Workspace</span>
           <i data-lucide="chevron-right"></i>
-          <span>Validação & Segurança</span>
+          <span>ValidaÃ§Ã£o & SeguranÃ§a</span>
           <i data-lucide="chevron-right"></i>
           <strong id="breadcrumb-title">Validador de CPF</strong>
         </div>
@@ -249,47 +260,47 @@ const html = `<!DOCTYPE html>
             <i data-lucide="moon"></i>
           </button>
           <a href="https://ponte-marketplace.maputo2.workers.dev" target="_blank" rel="noopener" class="primary-button accent" style="text-decoration:none;display:inline-flex;align-items:center;gap:7px;font-size:12.5px;padding:0 16px;height:36px;">
-            <i data-lucide="sparkles"></i> <span>Catálogo Completo</span>
+            <i data-lucide="sparkles"></i> <span>CatÃ¡logo Completo</span>
           </a>
         </div>
       </header>
 
-      <!-- Conteúdo da Página -->
+      <!-- ConteÃºdo da PÃ¡gina -->
       <div class="content-wrap">
         <div class="page-heading">
           <div>
-            <p class="eyebrow">SUPER VALIDADOR DETERMINÍSTICO DE BORDA</p>
-            <h1>CpfValidator Pro • Console Oficial Anycast</h1>
+            <p class="eyebrow">SUPER VALIDADOR DETERMINÃSTICO DE BORDA</p>
+            <h1>CpfValidator Pro â€¢ Console Oficial Anycast</h1>
             <p class="page-subtitle">
-              Validação matemática de CPF (Módulo 11 da Receita Federal com dedução de Região Fiscal), Inscrição Estadual das 27 UFs (SINTEGRA/CONFAZ) e inspeção forense de IP/User-Agent em menos de 2ms.
+              ValidaÃ§Ã£o matemÃ¡tica de CPF (MÃ³dulo 11 da Receita Federal com deduÃ§Ã£o de RegiÃ£o Fiscal), InscriÃ§Ã£o Estadual das 27 UFs (SINTEGRA/CONFAZ) e inspeÃ§Ã£o forense de IP/User-Agent em menos de 2ms.
             </p>
           </div>
         </div>
 
-        <!-- Cards de Métricas -->
+        <!-- Cards de MÃ©tricas -->
         <div class="billing-models-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-bottom: 26px;">
           <div class="model-card credit-card" style="padding:18px 22px;">
             <div class="model-card-header" style="margin-bottom:10px;">
-              <span class="model-badge credit"><i data-lucide="shield-check"></i> MÓDULO 11 RFB</span>
+              <span class="model-badge credit"><i data-lucide="shield-check"></i> MÃ“DULO 11 RFB</span>
             </div>
             <div style="font-size:20px;font-weight:800;color:var(--ink);margin-bottom:4px;">Receita Federal</div>
-            <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.45;">Cálculo dos dois dígitos verificadores com pesos 10 e 11 e rejeição de repetidos.</p>
+            <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.45;">CÃ¡lculo dos dois dÃ­gitos verificadores com pesos 10 e 11 e rejeiÃ§Ã£o de repetidos.</p>
           </div>
 
           <div class="model-card subscription-card" style="padding:18px 22px;">
             <div class="model-card-header" style="margin-bottom:10px;">
               <span class="model-badge sub"><i data-lucide="file-check"></i> 27 UFS SINTEGRA</span>
             </div>
-            <div style="font-size:20px;font-weight:800;color:var(--ink);margin-bottom:4px;">Inscrição Estadual</div>
-            <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.45;">Algoritmos oficiais das SEFAZ estaduais (Módulos 10, 11 e regras específicas).</p>
+            <div style="font-size:20px;font-weight:800;color:var(--ink);margin-bottom:4px;">InscriÃ§Ã£o Estadual</div>
+            <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.45;">Algoritmos oficiais das SEFAZ estaduais (MÃ³dulos 10, 11 e regras especÃ­ficas).</p>
           </div>
 
           <div class="model-card tier-card" style="padding:18px 22px;">
             <div class="model-card-header" style="margin-bottom:10px;">
               <span class="model-badge tier"><i data-lucide="zap"></i> SUB-2MS ANYCAST</span>
             </div>
-            <div style="font-size:20px;font-weight:800;color:var(--ink);margin-bottom:4px;">Zero Latência</div>
-            <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.45;">Validação determinística pura sem dependência externa, executada na memória RAM.</p>
+            <div style="font-size:20px;font-weight:800;color:var(--ink);margin-bottom:4px;">Zero LatÃªncia</div>
+            <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.45;">ValidaÃ§Ã£o determinÃ­stica pura sem dependÃªncia externa, executada na memÃ³ria RAM.</p>
           </div>
         </div>
 
@@ -299,13 +310,13 @@ const html = `<!DOCTYPE html>
             <i data-lucide="shield-check"></i> <span>Validador & Gerador de CPF</span>
           </button>
           <button class="tab-nav-btn" data-tab="ie">
-            <i data-lucide="file-check"></i> <span>Inscrição Estadual (SINTEGRA 27 UFs)</span>
+            <i data-lucide="file-check"></i> <span>InscriÃ§Ã£o Estadual (SINTEGRA 27 UFs)</span>
           </button>
         </div>
 
         <!-- Playground Split-Screen de 2 Colunas -->
         <div class="playground-split">
-          <!-- Coluna 1: Formulário e Painel Visual -->
+          <!-- Coluna 1: FormulÃ¡rio e Painel Visual -->
           <div class="playground-left">
             <!-- TAB 1: CPF -->
             <div id="section-cpf" class="tab-pane">
@@ -315,43 +326,43 @@ const html = `<!DOCTYPE html>
                     <i data-lucide="search" style="color:var(--blue);"></i>
                     <span>Validar ou Gerar CPF Homologado</span>
                   </span>
-                  <span class="status-badge-pill green">Módulo 11 Ativo</span>
+                  <span class="status-badge-pill green">MÃ³dulo 11 Ativo</span>
                 </div>
                 <p style="font-size:12.5px;color:var(--muted);margin-bottom:16px;line-height:1.5;">
-                  Digite um CPF para validar a integridade dos dígitos verificadores ou gere um CPF válido para testes:
+                  Digite um CPF para validar a integridade dos dÃ­gitos verificadores ou gere um CPF vÃ¡lido para testes:
                 </p>
 
                 <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
-                  <input type="text" id="cpf-input" value="529.982.247-25" placeholder="529.982.247-25..." maxlength="14" style="flex:2;min-width:200px;height:44px;padding:0 14px;border:1px solid var(--line);border-radius:var(--radius-md);font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--ink);background:var(--paper);outline:none;" />
+                  <input type="text" id="cpf-input" value="529.982.247-25" placeholder="529.982.247-25..." maxlength="14" style="flex:2;min-width:140px;height:44px;padding:0 14px;border:1px solid var(--line);border-radius:var(--radius-md);font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--ink);background:var(--paper);outline:none;" />
                   <button id="btn-exec-cpf" class="primary-button accent" style="height:44px;padding:0 18px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:7px;">
                     <i data-lucide="check"></i> <span>Validar CPF</span>
                   </button>
                   <button id="btn-gerar-cpf" class="secondary-button" style="height:44px;padding:0 16px;font-size:12.5px;font-weight:700;display:inline-flex;align-items:center;gap:7px;">
-                    <i data-lucide="sparkles"></i> <span>Gerar Válido</span>
+                    <i data-lucide="sparkles"></i> <span>Gerar VÃ¡lido</span>
                   </button>
                 </div>
 
                 <div style="border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;background:var(--paper);margin-top:16px;">
                   <div style="padding:12px 16px;background:var(--paper-elevated,#f8fafc);border-bottom:1px solid var(--line);font-size:13px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:7px;">
                     <i data-lucide="clipboard-list"></i>
-                    <span>Laudo de Validação da Receita Federal</span>
+                    <span>Laudo de ValidaÃ§Ã£o da Receita Federal</span>
                   </div>
                   <table class="specs-table">
                     <tbody>
                       <tr>
-                        <td class="label-col">Status Matemático</td>
-                        <td class="val-col" id="val-cpf-status"><span class="status-badge-pill green">VÁLIDO</span></td>
+                        <td class="label-col">Status MatemÃ¡tico</td>
+                        <td class="val-col" id="val-cpf-status"><span class="status-badge-pill green">VÃLIDO</span></td>
                       </tr>
                       <tr>
                         <td class="label-col">CPF Formatado</td>
                         <td class="val-col" id="val-cpf-formatado" style="font-family:'JetBrains Mono',monospace;">529.982.247-25</td>
                       </tr>
                       <tr>
-                        <td class="label-col">Região Fiscal (RFB)</td>
-                        <td class="val-col" id="val-cpf-regiao">8ª Região Fiscal (São Paulo)</td>
+                        <td class="label-col">RegiÃ£o Fiscal (RFB)</td>
+                        <td class="val-col" id="val-cpf-regiao">8Âª RegiÃ£o Fiscal (SÃ£o Paulo)</td>
                       </tr>
                       <tr>
-                        <td class="label-col">Dígitos Verificadores</td>
+                        <td class="label-col">DÃ­gitos Verificadores</td>
                         <td class="val-col" id="val-cpf-dvs" style="font-family:'JetBrains Mono',monospace;">25 (Calculados com Sucesso)</td>
                       </tr>
                     </tbody>
@@ -360,45 +371,45 @@ const html = `<!DOCTYPE html>
               </div>
             </div>
 
-            <!-- TAB 2: INSCRIÇÃO ESTADUAL -->
+            <!-- TAB 2: INSCRIÃ‡ÃƒO ESTADUAL -->
             <div id="section-ie" class="tab-pane" style="display:none;">
               <div class="card-dashboard">
                 <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
                   <span style="display:flex;align-items:center;gap:8px;">
                     <i data-lucide="file-check" style="color:var(--blue);"></i>
-                    <span>Validador de Inscrição Estadual (SINTEGRA / CONFAZ)</span>
+                    <span>Validador de InscriÃ§Ã£o Estadual (SINTEGRA / CONFAZ)</span>
                   </span>
                   <span class="status-badge-pill blue">27 UFs Oficiais</span>
                 </div>
                 <p style="font-size:12.5px;color:var(--muted);margin-bottom:16px;line-height:1.5;">
-                  Validação com os pesos, módulos e regras fiscais específicas de cada um dos 26 Estados e Distrito Federal:
+                  ValidaÃ§Ã£o com os pesos, mÃ³dulos e regras fiscais especÃ­ficas de cada um dos 26 Estados e Distrito Federal:
                 </p>
 
                 <div style="display:grid;grid-template-columns:1fr 2fr;gap:12px;margin-bottom:14px;">
                   <div>
                     <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;">Estado (UF)</label>
                     <select id="ie-uf" style="width:100%;height:44px;padding:0 12px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--paper);color:var(--ink);outline:none;font-weight:700;">
-                      <option value="SP" selected>SP - São Paulo</option>
+                      <option value="SP" selected>SP - SÃ£o Paulo</option>
                       <option value="RJ">RJ - Rio de Janeiro</option>
                       <option value="MG">MG - Minas Gerais</option>
-                      <option value="PR">PR - Paraná</option>
+                      <option value="PR">PR - ParanÃ¡</option>
                       <option value="RS">RS - Rio Grande do Sul</option>
                       <option value="SC">SC - Santa Catarina</option>
                       <option value="BA">BA - Bahia</option>
-                      <option value="GO">GO - Goiás</option>
+                      <option value="GO">GO - GoiÃ¡s</option>
                       <option value="PE">PE - Pernambuco</option>
-                      <option value="CE">CE - Ceará</option>
+                      <option value="CE">CE - CearÃ¡</option>
                       <option value="DF">DF - Distrito Federal</option>
                     </select>
                   </div>
                   <div>
-                    <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;">Inscrição Estadual</label>
+                    <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;">InscriÃ§Ã£o Estadual</label>
                     <input type="text" id="ie-input" value="110.042.490.114" style="width:100%;height:44px;padding:0 14px;border:1px solid var(--line);border-radius:var(--radius-md);font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--ink);background:var(--paper);outline:none;" />
                   </div>
                 </div>
 
                 <button id="btn-exec-ie" class="primary-button accent" style="width:100%;height:44px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:7px;">
-                  <i data-lucide="check"></i> <span>Validar Inscrição Estadual</span>
+                  <i data-lucide="check"></i> <span>Validar InscriÃ§Ã£o Estadual</span>
                 </button>
               </div>
             </div>
@@ -424,14 +435,14 @@ const html = `<!DOCTYPE html>
                 </button>
               </div>
 
-              <!-- Caixa de Código do Snippet -->
+              <!-- Caixa de CÃ³digo do Snippet -->
               <div class="snippet-code-box" style="padding:14px 18px;background:rgba(0,0,0,0.30);border-bottom:1px solid rgba(255,255,255,0.06);">
                 <pre class="snippet-pre" style="margin:0;font-family:'JetBrains Mono',monospace;font-size:12px;color:#7dd3fc;line-height:1.5;overflow-x:auto;"><code id="snippet-code">curl -s "https://cpfvalidator-pro-api.maputo2.workers.dev/api/validar-cpf?cpf=52998224725" \
   -H "Authorization: ******" \
   -H "x-api-key: cpf_live_sec_2026"</code></pre>
               </div>
 
-              <!-- Barra de Execução Sandbox -->
+              <!-- Barra de ExecuÃ§Ã£o Sandbox -->
               <div class="playground-bar">
                 <span class="method-tag get">GET</span>
                 <code class="endpoint-code" id="endpoint-display" style="font-size:12px;">/api/validar-cpf?cpf=52998224725</code>
@@ -444,7 +455,7 @@ const html = `<!DOCTYPE html>
               <div class="playground-console" style="min-height:300px;max-height:540px;overflow-y:auto;padding:16px;">
                 <div class="console-response-header" id="console-header" style="font-size:11.5px;margin-bottom:10px;">
                   <span class="badge-200" id="console-status">200 OK</span>
-                  <span id="console-latency">Latência: 1.1ms</span>
+                  <span id="console-latency">LatÃªncia: 1.1ms</span>
                   <span>Cloudflare Anycast</span>
                 </div>
                 <pre class="console-json" id="console-output" style="margin:0;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#f8fafc;line-height:1.5;"></pre>
@@ -456,7 +467,7 @@ const html = `<!DOCTYPE html>
     </main>
   </div>
 
-  <!-- Script da Aplicação e Integração -->
+  <!-- Script da AplicaÃ§Ã£o e IntegraÃ§Ã£o -->
   <script type="module">
     // Tema Claro / Escuro
     const themeBtn = document.getElementById('theme-toggle-btn');
@@ -474,7 +485,7 @@ const html = `<!DOCTYPE html>
       if (window.lucide) window.lucide.createIcons();
     }
 
-    // Navegação de Abas
+    // NavegaÃ§Ã£o de Abas
     const tabBtns = document.querySelectorAll('.tab-nav-btn, .primary-nav .nav-link[data-view]');
     tabBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -489,8 +500,8 @@ const html = `<!DOCTYPE html>
         const bread = document.getElementById('breadcrumb-title');
         const titles = {
           cpf: 'Validador de CPF',
-          ie: 'Inscrição Estadual (SINTEGRA 27 UFs)',
-          docs: 'Documentação REST'
+          ie: 'InscriÃ§Ã£o Estadual (SINTEGRA 27 UFs)',
+          docs: 'DocumentaÃ§Ã£o REST'
         };
         if (bread && titles[tabKey]) bread.textContent = titles[tabKey];
         updateSnippet();
@@ -545,7 +556,7 @@ const html = `<!DOCTYPE html>
       navigator.clipboard.writeText(txt).then(() => alert('Snippet copiado com sucesso!'));
     });
 
-    // ── LÓGICA DE VALIDAÇÃO DE CPF ──
+    // â”€â”€ LÃ“GICA DE VALIDAÃ‡ÃƒO DE CPF â”€â”€
     async function executarValidacaoCpf() {
       const raw = document.getElementById('cpf-input').value;
       const clean = raw.replace(/\\D/g, '');
@@ -554,7 +565,7 @@ const html = `<!DOCTYPE html>
       const consoleOutput = document.getElementById('console-output');
       const consoleStatus = document.getElementById('console-status');
       const consoleLat = document.getElementById('console-latency');
-      consoleOutput.textContent = 'Validando CPF com algoritmo Módulo 11 da Receita Federal...';
+      consoleOutput.textContent = 'Validando CPF com algoritmo MÃ³dulo 11 da Receita Federal...';
 
       const t0 = performance.now();
       try {
@@ -562,21 +573,21 @@ const html = `<!DOCTYPE html>
         const data = await res.json();
         const lat = Math.round(performance.now() - t0);
 
-        consoleStatus.textContent = res.ok ? '200 OK' : '422 INVÁLIDO';
+        consoleStatus.textContent = res.ok ? '200 OK' : '422 INVÃLIDO';
         consoleStatus.className = res.ok ? 'badge-200' : 'badge-500';
-        consoleLat.textContent = \`Latência: \${lat}ms\`;
+        consoleLat.textContent = \`LatÃªncia: \${lat}ms\`;
         consoleOutput.textContent = JSON.stringify(data, null, 2);
 
         if (data.valido) {
-          document.getElementById('val-cpf-status').innerHTML = '<span class="status-badge-pill green">VÁLIDO</span>';
+          document.getElementById('val-cpf-status').innerHTML = '<span class="status-badge-pill green">VÃLIDO</span>';
           document.getElementById('val-cpf-formatado').textContent = data.cpfFormatado || clean;
-          document.getElementById('val-cpf-regiao').textContent = data.regiaoFiscal ? data.regiaoFiscal.descricao : 'Não identificada';
-          document.getElementById('val-cpf-dvs').textContent = \`\${clean.slice(-2)} (Cálculo Módulo 11 OK)\`;
+          document.getElementById('val-cpf-regiao').textContent = data.regiaoFiscal ? data.regiaoFiscal.descricao : 'NÃ£o identificada';
+          document.getElementById('val-cpf-dvs').textContent = \`\${clean.slice(-2)} (CÃ¡lculo MÃ³dulo 11 OK)\`;
         } else {
-          document.getElementById('val-cpf-status').innerHTML = '<span class="status-badge-pill red">INVÁLIDO</span>';
+          document.getElementById('val-cpf-status').innerHTML = '<span class="status-badge-pill red">INVÃLIDO</span>';
           document.getElementById('val-cpf-formatado').textContent = clean;
           document.getElementById('val-cpf-regiao').textContent = '-';
-          document.getElementById('val-cpf-dvs').textContent = data.motivo || 'Dígitos verificadores incompatíveis';
+          document.getElementById('val-cpf-dvs').textContent = data.motivo || 'DÃ­gitos verificadores incompatÃ­veis';
         }
       } catch (err) {
         consoleOutput.textContent = \`Erro: \${err.message}\`;
@@ -597,7 +608,7 @@ const html = `<!DOCTYPE html>
       }
     });
 
-    // ── LÓGICA DE VALIDAÇÃO DE IE ──
+    // â”€â”€ LÃ“GICA DE VALIDAÃ‡ÃƒO DE IE â”€â”€
     async function executarValidacaoIe() {
       const uf = document.getElementById('ie-uf').value;
       const raw = document.getElementById('ie-input').value;
@@ -607,7 +618,7 @@ const html = `<!DOCTYPE html>
       const consoleOutput = document.getElementById('console-output');
       const consoleStatus = document.getElementById('console-status');
       const consoleLat = document.getElementById('console-latency');
-      consoleOutput.textContent = \`Validando Inscrição Estadual para \${uf}...\`;
+      consoleOutput.textContent = \`Validando InscriÃ§Ã£o Estadual para \${uf}...\`;
 
       const t0 = performance.now();
       try {
@@ -615,9 +626,9 @@ const html = `<!DOCTYPE html>
         const data = await res.json();
         const lat = Math.round(performance.now() - t0);
 
-        consoleStatus.textContent = res.ok ? '200 OK' : '422 INVÁLIDO';
+        consoleStatus.textContent = res.ok ? '200 OK' : '422 INVÃLIDO';
         consoleStatus.className = res.ok ? 'badge-200' : 'badge-500';
-        consoleLat.textContent = \`Latência: \${lat}ms\`;
+        consoleLat.textContent = \`LatÃªncia: \${lat}ms\`;
         consoleOutput.textContent = JSON.stringify(data, null, 2);
       } catch (err) {
         consoleOutput.textContent = \`Erro: \${err.message}\`;
@@ -632,7 +643,7 @@ const html = `<!DOCTYPE html>
       else executarValidacaoCpf();
     });
 
-    // Inicialização
+    // InicializaÃ§Ã£o
     renderLucide();
     setTimeout(() => {
       renderLucide();
@@ -645,3 +656,4 @@ const html = `<!DOCTYPE html>
 
 fs.writeFileSync('index.html', html, 'utf8');
 console.log('cpfvalidator-pro index.html updated with marketplace design system!');
+
